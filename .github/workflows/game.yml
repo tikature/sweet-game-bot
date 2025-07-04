@@ -1,0 +1,33 @@
+name: Sweet Game Issue Bot
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  reply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Respond to issue with a sweet message 🍭
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueTitle = context.payload.issue.title.toLowerCase();
+
+            let message = "🍰 Hello there, sweet seeker!";
+            if (issueTitle.includes("donut")) {
+              message = "🍩 You found a donut! +1 point!";
+            } else if (issueTitle.includes("cake")) {
+              message = "🎂 Yum! You picked cake. +2 points!";
+            } else if (issueTitle.includes("candy")) {
+              message = "🍬 Sweet candy! +1 point!";
+            } else {
+              message = "🍡 Hmm... not a known sweet. Try 'donut', 'cake', or 'candy'!";
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
